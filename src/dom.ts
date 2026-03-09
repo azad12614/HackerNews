@@ -1,44 +1,48 @@
-import { getFetchNews } from "../apis/news";
+import { getFetchData } from "./api";
 
-export function getNews(newsList: HTMLOListElement | null, pageNo: number) {
-  if (!newsList) {
+export function showData(
+  list: HTMLOListElement | null,
+  pageNo: number,
+  url: string,
+) {
+  if (!list) {
     return;
   }
 
-  newsList.innerHTML = "";
+  list.innerHTML = "";
 
-  getFetchNews(pageNo).then((allNews) => {
-    // console.log(allNews);
-    // console.log(allNews[0]);
+  getFetchData(pageNo, url).then((allData) => {
+    // console.log(allData);
+    // console.log(allData[0]);
 
-    allNews.map((news, id) => {
-      const newsItem = document.createElement("li");
+    allData.map((info, id) => {
+      const item = document.createElement("li");
 
-      newsItem.className = "grid grid-cols-[18px_14px_1fr] items-start";
+      item.className = "grid grid-cols-[18px_14px_1fr] items-start";
 
       const rank = document.createElement("span");
       rank.className = "pr-1 text-right text-[#828282]";
       rank.textContent = `${30 * (pageNo - 1) + id + 1}.`;
-      newsItem.appendChild(rank);
+      item.appendChild(rank);
 
       const upvote = document.createElement("span");
       upvote.className = "pt-[2px] text-[10px] text-[#828282]";
       upvote.textContent = "▲";
-      newsItem.appendChild(upvote);
+      item.appendChild(upvote);
 
       const meta = document.createElement("div");
       meta.className = "leading-[1.1]";
 
       const title = document.createElement("a");
       title.className = "text-[#000] hover:underline";
-      title.textContent = news.title;
-      title.href = news.url;
+      title.textContent = info.title;
+      title.href = info.url;
       meta.appendChild(title);
 
-      if (news.domain) {
+      if (info.domain) {
         const domain = document.createElement("span");
         domain.className = "pl-[4px] text-[#828282]";
-        domain.textContent = `(${news?.domain})`;
+        domain.textContent = `(${info?.domain})`;
 
         meta.appendChild(domain);
       }
@@ -48,26 +52,26 @@ export function getNews(newsList: HTMLOListElement | null, pageNo: number) {
 
       const userLink = document.createElement("a");
       userLink.className = "hover:underline";
-      userLink.href = `https://news.ycombinator.com/user?id=${news.user}`;
-      userLink.textContent = news.user;
+      userLink.href = `https://info.ycombinator.com/user?id=${info.user}`;
+      userLink.textContent = info.user;
 
       const commentsLink = document.createElement("a");
       commentsLink.className = "hover:underline";
-      commentsLink.href = `https://news.ycombinator.com/item?id=${news.id}`;
-      commentsLink.textContent = `${news.comments_count} comments`;
+      commentsLink.href = `https://info.ycombinator.com/item?id=${info.id}`;
+      commentsLink.textContent = `${info.comments_count} comments`;
 
       subMeta.append(
-        `${news.points} points by `,
+        `${info.points} points by `,
         userLink,
-        ` ${news.time_ago} | `,
+        ` ${info.time_ago} | `,
         commentsLink,
       );
 
       const blog = document.createElement("div");
       blog.appendChild(meta);
       blog.appendChild(subMeta);
-      newsItem.appendChild(blog);
-      newsList.appendChild(newsItem);
+      item.appendChild(blog);
+      list.appendChild(item);
     });
   });
 }
@@ -87,14 +91,15 @@ export function getNews(newsList: HTMLOListElement | null, pageNo: number) {
 //           </li>
 
 export function pageUP(
-  newsList: HTMLOListElement | null,
+  list: HTMLOListElement | null,
   page: HTMLButtonElement | null,
   pageNo: number,
+  url: string,
 ): number {
   page?.classList.add("text-[#000033]");
   page?.addEventListener("click", () => {
     pageNo += 1;
-    getNews(newsList, pageNo);
+    showData(list, pageNo, url);
   });
   return pageNo;
 }

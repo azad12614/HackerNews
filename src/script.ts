@@ -1,26 +1,39 @@
-import { getNews, pageUP } from "../dom/news";
-import "../style.css";
+import { showData, pageUP } from "./dom";
+import "./style.css";
 
 let pageNo = 1;
+
+let url = window.location.hash;
+if (!url) {
+  url = "news";
+} else {
+  url = url.substring(1, url.length);
+}
+
+const noMoreBtn = url === "past" || url === "comments";
+
+window.addEventListener("hashchange", () => {
+  window.location.reload();
+});
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div class="min-h-screen bg-[#f6f6ef] text-[#000] [font-family:Verdana,Geneva,sans-serif]">
     <main class="mx-auto w-full max-w-[1200px] px-0 sm:mt-2 sm:px-3">
       <header class="flex min-h-[30px] items-center gap-1 border-b border-[#ff6600] bg-[#fffaf0] px-1 text-[18px] leading-none text-[#ff6600]">
-        <a href="/src/pages/news.html" class="mr-1 flex h-[23px] w-[23px] shrink-0 items-center justify-center border border-[#ff6600] bg-[#ff6600] text-[16px] font-bold text-white">Y</a>
-        <a href="/src/pages/news.html" class="mr-1 whitespace-nowrap font-bold text-[#ff6600] hover:underline">Hacker News</a>
+        <a href="#news" class="mr-1 flex h-[23px] w-[23px] shrink-0 items-center justify-center border border-[#ff6600] bg-[#ff6600] text-[16px] font-bold text-white">Y</a>
+        <a href="#news" class="mr-1 whitespace-nowrap font-bold text-[#ff6600]">Hacker News</a>
         <nav class="flex flex-wrap items-center gap-1 text-[18px]">
-          <a href="/src/pages/new.html" class="text-[#ff6600] hover:underline">new</a>
+          <a href="#newest" class="text-[#ff6600] hover:underline">new</a>
           <span>|</span>
-          <a href="/src/pages/past.html" class="text-[#ff6600] hover:underline">past</a>
+          <a href="#past" class="text-[#ff6600] hover:underline">past</a>
           <span>|</span>
-          <a href="/src/pages/comments.html" class="text-[#ff6600] hover:underline">comments</a>
+          <a href="#comments" class="text-[#ff6600] hover:underline">comments</a>
           <span>|</span>
-          <a href="/src/pages/ask.html" class="text-[#ff6600] hover:underline">ask</a>
+          <a href="#ask" class="text-[#ff6600] hover:underline">ask</a>
           <span>|</span>
-          <a href="/src/pages/show.html" class="text-[#ff6600] hover:underline">show</a>
+          <a href="#show" class="text-[#ff6600] hover:underline">show</a>
           <span>|</span>
-          <a href="/src/pages/jobs.html" class="text-[#ff6600] hover:underline">jobs</a>
+          <a href="#jobs" class="text-[#ff6600] hover:underline">jobs</a>
           <span>|</span>
           <a href="https://news.ycombinator.com/submit" class="text-[#ff6600] hover:underline">submit</a>
         </nav>
@@ -28,11 +41,11 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       </header>
 
       <section class="bg-[#f6f6ef] px-2 py-2 text-[14px] sm:text-[13px]">
-        <ol class="space-y-2.5" id="news">
+        <ol class="space-y-2.5" id="list">
           
         </ol>
 
-        <button class="mt-4 inline-block pl-8 text-[13px] hover:underline" id="more">More</button>
+        <button class="mt-4 inline-block pl-8 text-[13px] hover:underline ${noMoreBtn ? "invisible" : ""}" id="more">More</button>
       </section>
 
       <footer class="mt-6 border-t border-[#ff6600] px-2 py-4 text-center text-[11px] text-[#828282]">
@@ -60,9 +73,18 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-pageNo = pageUP(
-  document.querySelector<HTMLOListElement>("#news"),
-  document.querySelector<HTMLButtonElement>("#more"),
-  pageNo,
-);
-getNews(document.querySelector<HTMLOListElement>("#news"), pageNo);
+if (noMoreBtn) {
+  const list = document.querySelector<HTMLOListElement>("#list");
+  const item = document.createElement("p");
+  item.textContent = `No Api for ${url} section`;
+  item.className = "py-8 text-center text-[13px] text-[#828282] italic";
+  list?.appendChild(item);
+} else {
+  pageNo = pageUP(
+    document.querySelector<HTMLOListElement>("#list"),
+    document.querySelector<HTMLButtonElement>("#more"),
+    pageNo,
+    url,
+  );
+  showData(document.querySelector<HTMLOListElement>("#list"), pageNo, url);
+}
