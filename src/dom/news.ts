@@ -1,7 +1,13 @@
-import { getFetchNews } from "./apis";
+import { getFetchNews } from "../apis/news";
 
-export function getNews(newsList: HTMLOListElement | null) {
-  getFetchNews(1).then((allNews) => {
+export function getNews(newsList: HTMLOListElement | null, pageNo: number) {
+  if (!newsList) {
+    return;
+  }
+
+  newsList.innerHTML = "";
+
+  getFetchNews(pageNo).then((allNews) => {
     // console.log(allNews);
     // console.log(allNews[0]);
 
@@ -12,7 +18,7 @@ export function getNews(newsList: HTMLOListElement | null) {
 
       const rank = document.createElement("span");
       rank.className = "pr-1 text-right text-[#828282]";
-      rank.textContent = `${id + 1}.`;
+      rank.textContent = `${30 * (pageNo - 1) + id + 1}.`;
       newsItem.appendChild(rank);
 
       const upvote = document.createElement("span");
@@ -61,7 +67,7 @@ export function getNews(newsList: HTMLOListElement | null) {
       blog.appendChild(meta);
       blog.appendChild(subMeta);
       newsItem.appendChild(blog);
-      newsList?.appendChild(newsItem);
+      newsList.appendChild(newsItem);
     });
   });
 }
@@ -79,3 +85,16 @@ export function getNews(newsList: HTMLOListElement | null) {
 //               </div>
 //             </div>
 //           </li>
+
+export function pageUP(
+  newsList: HTMLOListElement | null,
+  page: HTMLButtonElement | null,
+  pageNo: number,
+): number {
+  page?.classList.add("text-[#000033]");
+  page?.addEventListener("click", () => {
+    pageNo += 1;
+    getNews(newsList, pageNo);
+  });
+  return pageNo;
+}
