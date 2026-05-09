@@ -11,4 +11,4 @@ export interface Types {
   domain?: string;
 }
 
-export const API_URL = "https://api.hnpwa.com/v0/";
+export const API_URL = import.meta.env.VITE_API_URL as string;

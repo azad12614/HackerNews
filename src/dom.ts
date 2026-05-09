@@ -37,6 +37,7 @@ export function showData(
       title.className = "text-[#000] hover:underline";
       title.textContent = info.title;
       title.href = info.url;
+      title.target = "_blank";
       meta.appendChild(title);
 
       if (info.domain) {
@@ -59,13 +60,16 @@ export function showData(
       commentsLink.className = "hover:underline";
       commentsLink.href = `https://info.ycombinator.com/item?id=${info.id}`;
       commentsLink.textContent = `${info.comments_count} comments`;
-
-      subMeta.append(
-        `${info.points} points by `,
-        userLink,
-        ` ${info.time_ago} | `,
-        commentsLink,
-      );
+      if (url == "jobs") {
+        subMeta.append(`${info.time_ago}`);
+      } else {
+        subMeta.append(
+          `${info.points} points by `,
+          userLink,
+          ` ${info.time_ago} | `,
+          commentsLink,
+        );
+      }
 
       const blog = document.createElement("div");
       blog.appendChild(meta);

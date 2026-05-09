@@ -23,17 +23,17 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         <a href="#news" class="mr-1 flex h-[23px] w-[23px] shrink-0 items-center justify-center border border-[#ff6600] bg-[#ff6600] text-[16px] font-bold text-white">Y</a>
         <a href="#news" class="mr-1 whitespace-nowrap font-bold text-[#ff6600]">Hacker News</a>
         <nav class="flex flex-wrap items-center gap-1 text-[18px]">
-          <a href="#newest" class="text-[#ff6600] hover:underline">new</a>
+          <a href="#newest" class="${url === "newest" ? "text-[#000000]" : "text-[#ff6600]"} hover:underline">new</a>
           <span>|</span>
-          <a href="#past" class="text-[#ff6600] hover:underline">past</a>
+          <a href="#past" class="${url === "past" ? "text-[#000000]" : "text-[#ff6600]"} hover:underline">past</a>
           <span>|</span>
-          <a href="#comments" class="text-[#ff6600] hover:underline">comments</a>
+          <a href="#comments" class="${url === "comments" ? "text-[#000000]" : "text-[#ff6600]"} hover:underline">comments</a>
           <span>|</span>
-          <a href="#ask" class="text-[#ff6600] hover:underline">ask</a>
+          <a href="#ask" class="${url === "ask" ? "text-[#000000]" : "text-[#ff6600]"} hover:underline">ask</a>
           <span>|</span>
-          <a href="#show" class="text-[#ff6600] hover:underline">show</a>
+          <a href="#show" class="${url === "show" ? "text-[#000000]" : "text-[#ff6600]"} hover:underline">show</a>
           <span>|</span>
-          <a href="#jobs" class="text-[#ff6600] hover:underline">jobs</a>
+          <a href="#jobs" class="${url === "jobs" ? "text-[#000000]" : "text-[#ff6600]"} hover:underline">jobs</a>
           <span>|</span>
           <a href="https://news.ycombinator.com/submit" class="text-[#ff6600] hover:underline">submit</a>
         </nav>
